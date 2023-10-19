@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.siwonpawel.zut'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.bouncycastle:bcpg-jdk15on:1.70'
+}
+
+test {
+    useJUnitPlatform()
+}
