@@ -1,5 +1,7 @@
 package com.siwonpawel.zut;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Scanner;
 
 import javax.crypto.Cipher;
@@ -17,7 +19,10 @@ public class Main
         byte[] encryptedText = encryptor.doFinal(plaintext.getBytes());
         prettyPrint("Zaszyfrowany tekst:", encryptedText);
 
+        Instant started = Instant.now();
         BlindDecryptor blindDecryptor = getBlindDecryptor(cipherFactory);
+        Duration between = Duration.between(started, Instant.now());
+//        System.out.println("Execution time" + between.getSeconds() + "," + between.getNano() + " s");
 
         byte[] decrypt = blindDecryptor.decrypt(encryptedText);
         System.out.println("Tekst w wersji jawnej: --[16B]--" + new String(decrypt));
