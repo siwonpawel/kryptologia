@@ -14,6 +14,11 @@ public class BlindDecryptor
 
     public byte[] decrypt(byte[] encryptedText)
     {
+        if(encryptedText.length <= 16) {
+            System.out.println("2 or more blocks required");
+            return new byte[]{};
+        }
+
         int blockSize = findBlockSize(encryptedText);
         byte[][] split = split(encryptedText, blockSize);
 
