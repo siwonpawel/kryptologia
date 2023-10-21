@@ -1,4 +1,4 @@
-package com.siwonpawel.zut;
+package com.siwonpawel.zut.lab01;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
