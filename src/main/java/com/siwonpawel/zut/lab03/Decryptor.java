@@ -12,10 +12,10 @@ public class Decryptor
 
     public String doFinal(byte[] val)
     {
-        BigInteger encrypted = new BigInteger(1, val);
+        BigInteger encrypted = new BigInteger(val);
 
-        BigInteger bigInteger = encrypted.modPow(key.getPrivateExponent(), key.getModulus());
-        return new String(bigInteger.toByteArray());
+        BigInteger decrypted = encrypted.modPow(key.getPrivateExponent(), key.getModulus());
+        return new String(decrypted.toByteArray());
     }
 
 }
