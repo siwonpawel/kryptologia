@@ -9,23 +9,23 @@ public class KeyPair implements DecryptionKeyPair, EncryptionKeyPair
     @Getter
     private final BigInteger modulus;
     @Getter
-    private final BigInteger privateExponent; //private
+    private final BigInteger privateExponent;
     @Getter
-    private final BigInteger publicExponent; //public
+    private final BigInteger publicExponent;
 
     public KeyPair(BigInteger primeP, BigInteger primeQ)
     {
         modulus = findN(primeP, primeQ);
 
-        BigInteger phiN = primeP.min(BigInteger.ONE).multiply(primeQ.min(BigInteger.ONE));
+        BigInteger phiN = primeP.subtract(BigInteger.ONE).multiply(primeQ.subtract(BigInteger.ONE));
         publicExponent = findPublicExponent(phiN);
         privateExponent = findPrivateExponent(publicExponent, phiN);
     }
 
     private BigInteger findPublicExponent(BigInteger phiN)
     {
-        BigInteger e = BigInteger.TWO;
-        while (e.compareTo(phiN) < 0 && phiN.gcd(e).compareTo(BigInteger.ONE) >= 0)
+        BigInteger e = phiN.divide(BigInteger.TWO);
+        while (e.compareTo(phiN) < 0 && phiN.gcd(e).intValue() > 1)
         {
             e = e.add(BigInteger.ONE);
         }

@@ -15,9 +15,7 @@ public class Decryptor
         BigInteger encrypted = new BigInteger(1, val);
 
         BigInteger bigInteger = encrypted.modPow(key.getPrivateExponent(), key.getModulus());
-        byte[] decrypted = bigInteger.toByteArray();
-
-        return new String(decrypted);
+        return new String(bigInteger.toByteArray());
     }
 
 }
