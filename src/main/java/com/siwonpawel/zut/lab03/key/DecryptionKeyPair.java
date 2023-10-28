@@ -7,6 +7,6 @@ public interface DecryptionKeyPair
 
     BigInteger getModulus();
 
-    BigInteger getPublicExponent();
+    BigInteger getPrivateExponent();
 
 }

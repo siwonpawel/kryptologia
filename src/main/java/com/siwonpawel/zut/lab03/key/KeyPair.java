@@ -25,7 +25,7 @@ public class KeyPair implements DecryptionKeyPair, EncryptionKeyPair
     private BigInteger findPublicExponent(BigInteger phiN)
     {
         BigInteger e = BigInteger.TWO;
-        while (e.compareTo(phiN) < 0 && phiN.gcd(e).compareTo(BigInteger.ONE) > 0)
+        while (e.compareTo(phiN) < 0 && phiN.gcd(e).compareTo(BigInteger.ONE) >= 0)
         {
             e = e.add(BigInteger.ONE);
         }

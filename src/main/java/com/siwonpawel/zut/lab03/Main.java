@@ -16,6 +16,14 @@ public class Main
 
         KeyPair keyPair = keyGenerator.generate();
 
+        Encryptor encryptor = new Encryptor(keyPair);
+        Decryptor decryptor = new Decryptor(keyPair);
+
+        String msg = "Cześć!";
+        byte[] bytes = encryptor.doFinal(msg);
+        String s = decryptor.doFinal(bytes);
+
+        System.out.println("Decrypted: " + s);
     }
 
 }
