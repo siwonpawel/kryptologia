@@ -1,0 +1,51 @@
+package com.siwonpawel.zut.lab03;
+
+import java.math.BigInteger;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import static org.assertj.core.api.Assertions.*;
+
+class EncryptorTest
+{
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1,1",
+            "2,8",
+            "3,27",
+            "4,31",
+            "5,26",
+            "6,18",
+            "7,13",
+            "8,17",
+            "9,3",
+            "10,10",
+            "11,11",
+            "12,12",
+            "13,19",
+            "14,5",
+            "15,9",
+            "16,4",
+    })
+    void shouldEncryptCorrectly(BigInteger msg, BigInteger expectedResult)
+    {
+        // given
+        TestKeyProvider testKeyProvider = new TestKeyProvider(
+                BigInteger.valueOf(33),
+                BigInteger.valueOf(7),
+                BigInteger.valueOf(3)
+        );
+
+        Encryptor encryptor = new Encryptor(testKeyProvider);
+
+        // when
+        BigInteger result = encryptor.doFinal(msg);
+
+        // then
+        assertThat(result)
+                .isEqualTo(expectedResult);
+    }
+
+}

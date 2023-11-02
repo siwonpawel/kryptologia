@@ -1,11 +1,10 @@
 package com.siwonpawel.zut.lab03;
 
 import java.math.BigInteger;
-import java.security.KeyFactory;
+import java.security.SecureRandom;
 
 import com.siwonpawel.zut.lab03.key.KeyGenerator;
 import com.siwonpawel.zut.lab03.key.KeyPair;
-import com.siwonpawel.zut.lab03.prime.MillerRabinPrimalityTester;
 import com.siwonpawel.zut.lab03.prime.PrimeGenerator;
 
 public class Main
@@ -13,24 +12,23 @@ public class Main
 
     public static void main(String[] args)
     {
-        KeyFactory.getInstance()
+        SecureRandom random = new SecureRandom();
+        PrimeGenerator primeGenerator = new PrimeGenerator(16, random);
 
-        MillerRabinPrimalityTester primeTester = new MillerRabinPrimalityTester();
-        PrimeGenerator primeGenerator = new PrimeGenerator(primeTester);
         KeyGenerator keyGenerator = new KeyGenerator(primeGenerator);
 
-        //                KeyPair keyPair = keyGenerator.generate();
-        KeyPair keyPair = new KeyPair(BigInteger.valueOf(252097800623L), BigInteger.valueOf(22801763489L));
+        KeyPair keyPair = keyGenerator.generate(random);
 
         Encryptor encryptor = new Encryptor(keyPair);
         Decryptor decryptor = new Decryptor(keyPair);
 
-        String msg = "Cześć!";
-        byte[] bytes = encryptor.doFinal(msg);
-        System.out.println("Encrypted: " + new String(bytes));
-        String s = decryptor.doFinal(bytes);
+        BigInteger orgValue = BigInteger.valueOf(5000);
+        BigInteger encrypted = encryptor.doFinal(orgValue);
+        BigInteger decrypted = decryptor.doFinal(encrypted);
 
-        System.out.println("Decrypted: " + s);
+        System.out.println(orgValue);
+        System.out.println(encrypted);
+        System.out.println(decrypted);
     }
 
 }

@@ -9,18 +9,11 @@ import lombok.RequiredArgsConstructor;
 public class PrimeGenerator
 {
 
-    private final MillerRabinPrimalityTester primeTester;
+    private final int keySize;
+    private final Random random;
 
     public BigInteger generate()
     {
-        Random random = new Random(System.currentTimeMillis());
-
-        BigInteger bigInteger = BigInteger.probablePrime(512, random);
-        while (primeTester.test(bigInteger))
-        {
-            bigInteger = bigInteger.add(BigInteger.ONE);
-        }
-
-        return bigInteger;
+        return BigInteger.probablePrime(keySize / 2, random);
     }
 }

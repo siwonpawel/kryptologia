@@ -10,12 +10,9 @@ public class Decryptor
 {
     private final DecryptionKeyPair key;
 
-    public String doFinal(byte[] val)
+    public BigInteger doFinal(BigInteger encrypted)
     {
-        BigInteger encrypted = new BigInteger(val);
-
-        BigInteger decrypted = encrypted.modPow(key.getPrivateExponent(), key.getModulus());
-        return new String(decrypted.toByteArray());
+        return encrypted.modPow(key.getPrivateExponent(), key.getModulus());
     }
 
 }

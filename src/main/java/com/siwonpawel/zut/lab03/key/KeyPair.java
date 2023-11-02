@@ -1,6 +1,7 @@
 package com.siwonpawel.zut.lab03.key;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 import lombok.Getter;
 
@@ -10,43 +11,42 @@ public class KeyPair implements DecryptionKeyPair, EncryptionKeyPair
     private final BigInteger primeP;
     private final BigInteger primeQ;
     private final BigInteger modulus;
+    private final BigInteger phiN;
     private final BigInteger privateExponent;
     private final BigInteger publicExponent;
 
-    public KeyPair(BigInteger primeP, BigInteger primeQ)
+    public KeyPair(BigInteger primeP, BigInteger primeQ, Random random)
     {
         this.primeP = primeP;
         this.primeQ = primeQ;
 
-        modulus = findN(primeP, primeQ);
+        modulus = computeModulus(primeP, primeQ);
 
-        BigInteger phiN = primeP.subtract(BigInteger.ONE).multiply(primeQ.subtract(BigInteger.ONE));
-        publicExponent = findPublicExponent(phiN);
-        privateExponent = findPrivateExponent(publicExponent, phiN);
+        phiN = computePhi(primeP, primeQ);
+        publicExponent = getCoprime(phiN, random);
+        privateExponent = publicExponent.modInverse(modulus);
     }
 
-    private BigInteger findPublicExponent(BigInteger phiN)
-    {
-        BigInteger e = BigInteger.TWO;
-        while (e.compareTo(phiN) < 0 && phiN.gcd(e).intValue() > 1)
-        {
-            e = e.add(BigInteger.ONE);
-        }
-        return e;
-    }
-
-    private BigInteger findPrivateExponent(BigInteger e, BigInteger phiN)
-    {
-        BigInteger bigInteger = e.modInverse(phiN);
-        if (bigInteger.compareTo(e) == 0)
-        {
-            e = e.add(BigInteger.ONE);
-        }
-        return e.modInverse(phiN);
-    }
-
-    private static BigInteger findN(BigInteger primeP, BigInteger primeQ)
+    private static BigInteger computeModulus(BigInteger primeP, BigInteger primeQ)
     {
         return primeP.multiply(primeQ);
+    }
+
+    private static BigInteger computePhi(BigInteger primeP, BigInteger primeQ)
+    {
+        return primeP.subtract(BigInteger.ONE).multiply(primeQ.subtract(BigInteger.ONE));
+    }
+
+    private static BigInteger getCoprime(BigInteger phiN, Random random)
+    {
+        int length = phiN.bitLength() - 2;
+
+        BigInteger e = BigInteger.probablePrime(length, random);
+        while (!phiN.gcd(e).equals(BigInteger.ONE))
+        {
+            e = BigInteger.probablePrime(length, random);
+        }
+
+        return e;
     }
 }
