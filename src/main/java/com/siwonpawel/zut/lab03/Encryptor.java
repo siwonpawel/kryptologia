@@ -13,7 +13,9 @@ public class Encryptor
     public byte[] doFinal(String message)
     {
         byte[] bytes = message.getBytes();
-        BigInteger plaintext = new BigInteger(1, bytes);
+        BigInteger plaintext = new BigInteger(bytes);
+
+        byte[] byteArray = keyPair.getPublicExponent().toByteArray();
 
         BigInteger encrypted = plaintext.modPow(keyPair.getPublicExponent(), keyPair.getModulus());
 

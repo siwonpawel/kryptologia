@@ -1,6 +1,7 @@
 package com.siwonpawel.zut.lab03;
 
 import java.math.BigInteger;
+import java.security.KeyFactory;
 
 import com.siwonpawel.zut.lab03.key.KeyGenerator;
 import com.siwonpawel.zut.lab03.key.KeyPair;
@@ -12,11 +13,13 @@ public class Main
 
     public static void main(String[] args)
     {
+        KeyFactory.getInstance()
+
         MillerRabinPrimalityTester primeTester = new MillerRabinPrimalityTester();
         PrimeGenerator primeGenerator = new PrimeGenerator(primeTester);
         KeyGenerator keyGenerator = new KeyGenerator(primeGenerator);
 
-        //        KeyPair keyPair = keyGenerator.generate();
+        //                KeyPair keyPair = keyGenerator.generate();
         KeyPair keyPair = new KeyPair(BigInteger.valueOf(252097800623L), BigInteger.valueOf(22801763489L));
 
         Encryptor encryptor = new Encryptor(keyPair);

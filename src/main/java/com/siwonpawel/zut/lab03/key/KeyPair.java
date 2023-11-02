@@ -4,17 +4,20 @@ import java.math.BigInteger;
 
 import lombok.Getter;
 
+@Getter
 public class KeyPair implements DecryptionKeyPair, EncryptionKeyPair
 {
-    @Getter
+    private final BigInteger primeP;
+    private final BigInteger primeQ;
     private final BigInteger modulus;
-    @Getter
     private final BigInteger privateExponent;
-    @Getter
     private final BigInteger publicExponent;
 
     public KeyPair(BigInteger primeP, BigInteger primeQ)
     {
+        this.primeP = primeP;
+        this.primeQ = primeQ;
+
         modulus = findN(primeP, primeQ);
 
         BigInteger phiN = primeP.subtract(BigInteger.ONE).multiply(primeQ.subtract(BigInteger.ONE));
