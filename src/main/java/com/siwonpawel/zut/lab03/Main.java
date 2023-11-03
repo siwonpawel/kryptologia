@@ -1,7 +1,7 @@
 package com.siwonpawel.zut.lab03;
 
-import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 import com.siwonpawel.zut.lab03.key.KeyGenerator;
 import com.siwonpawel.zut.lab03.key.KeyPair;
@@ -13,7 +13,7 @@ public class Main
     public static void main(String[] args)
     {
         SecureRandom random = new SecureRandom();
-        PrimeGenerator primeGenerator = new PrimeGenerator(16, random);
+        PrimeGenerator primeGenerator = new PrimeGenerator(PrimeGenerator.KEY_SIZE_4096, random);
 
         KeyGenerator keyGenerator = new KeyGenerator(primeGenerator);
 
@@ -22,13 +22,20 @@ public class Main
         Encryptor encryptor = new Encryptor(keyPair);
         Decryptor decryptor = new Decryptor(keyPair);
 
-        BigInteger orgValue = BigInteger.valueOf(5000);
-        BigInteger encrypted = encryptor.doFinal(orgValue);
-        BigInteger decrypted = decryptor.doFinal(encrypted);
+        System.out.println("Public key  (e) = " + keyPair.getPublicExponent());
+        System.out.println("Private key (d) = " + keyPair.getPrivateExponent());
 
-        System.out.println(orgValue);
-        System.out.println(encrypted);
-        System.out.println(decrypted);
+        String orgValue = "Cześć!";
+        byte[] orgValueBytes = orgValue.getBytes();
+        var encrypted = encryptor.doFinal(orgValueBytes);
+        var decrypted = decryptor.doFinal(encrypted);
+
+        System.out.printf("msg = %s%n", orgValue);
+        System.out.println("message in bytes");
+        Utils.prettyPrint(orgValueBytes, 64);
+        System.out.println("signature");
+        Utils.prettyPrint(encrypted, 64);
+        System.out.printf("message is valid: %b", Arrays.equals(orgValueBytes, decrypted));
     }
 
 }
