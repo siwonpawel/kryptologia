@@ -1,7 +1,6 @@
 package com.siwonpawel.zut.lab03.key;
 
 import java.math.BigInteger;
-import java.util.Random;
 
 import lombok.Getter;
 
@@ -15,7 +14,7 @@ public class KeyPair implements DecryptionKeyPair, EncryptionKeyPair
     private final BigInteger privateExponent;
     private final BigInteger publicExponent;
 
-    public KeyPair(BigInteger primeP, BigInteger primeQ, Random random)
+    public KeyPair(BigInteger primeP, BigInteger primeQ)
     {
         this.primeP = primeP;
         this.primeQ = primeQ;
@@ -23,8 +22,13 @@ public class KeyPair implements DecryptionKeyPair, EncryptionKeyPair
         modulus = computeModulus(primeP, primeQ);
 
         phiN = computePhi(primeP, primeQ);
-        publicExponent = getCoprime(phiN, random);
-        privateExponent = publicExponent.modInverse(modulus);
+        publicExponent = getCoprime(phiN);
+        privateExponent = computePrivateExponent(publicExponent);
+    }
+
+    private BigInteger computePrivateExponent(BigInteger publicExponent)
+    {
+        return publicExponent.modInverse(phiN);
     }
 
     private static BigInteger computeModulus(BigInteger primeP, BigInteger primeQ)
@@ -37,14 +41,16 @@ public class KeyPair implements DecryptionKeyPair, EncryptionKeyPair
         return primeP.subtract(BigInteger.ONE).multiply(primeQ.subtract(BigInteger.ONE));
     }
 
-    private static BigInteger getCoprime(BigInteger phiN, Random random)
+    private static BigInteger getCoprime(BigInteger phiN)
     {
-        int length = phiN.bitLength() - 2;
-
-        BigInteger e = BigInteger.probablePrime(length, random);
+        BigInteger e = BigInteger.valueOf(3);
         while (!phiN.gcd(e).equals(BigInteger.ONE))
         {
-            e = BigInteger.probablePrime(length, random);
+            if (e.compareTo(phiN) >= 0)
+            {
+                throw new CannotFindCoprimeException("cannot compute e [public exponent]");
+            }
+            e = e.add(BigInteger.ONE);
         }
 
         return e;

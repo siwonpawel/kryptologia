@@ -17,7 +17,7 @@ public class Main
 
         KeyGenerator keyGenerator = new KeyGenerator(primeGenerator);
 
-        KeyPair keyPair = keyGenerator.generate(random);
+        KeyPair keyPair = keyGenerator.generate();
 
         Encryptor encryptor = new Encryptor(keyPair);
         Decryptor decryptor = new Decryptor(keyPair);
