@@ -56,7 +56,6 @@ public class Zad_1_2_d
         System.out.printf("M = %d%n", M);
         System.out.printf("R = %d%n", finalResult);
         System.out.printf("messages are equal = %b%n", M.equals(finalResult));
-
     }
 
     public static BigInteger[] extendedGCD(BigInteger a, BigInteger b)

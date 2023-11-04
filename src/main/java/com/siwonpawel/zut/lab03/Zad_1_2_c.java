@@ -1,6 +1,7 @@
 package com.siwonpawel.zut.lab03;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 
 public class Zad_1_2_c
 {
@@ -17,9 +18,41 @@ public class Zad_1_2_c
 
     public static void main(String[] args)
     {
-        BigInteger bigInteger = S.modPow(E, N);
+        BigInteger result = Ith_Root(S, E);
 
-        Utils.prettyPrint(bigInteger.toByteArray(), 32);
+        Utils.prettyPrint(result.toByteArray(), 32);
+
+        // 544D454B
+        // T M E K
+
+        System.out.println(new String(result.toByteArray(), StandardCharsets.US_ASCII));
+    }
+
+    public static BigInteger Ith_Root(BigInteger N, BigInteger K)
+    {
+
+        BigInteger K1 = K.subtract(BigInteger.ONE);
+        BigInteger S = N.add(BigInteger.ONE);
+        BigInteger U = N;
+        while (U.compareTo(S) == -1)
+        {
+            S = U;
+            U = (U.multiply(K1).add(N.divide(pow(U, K1)))).divide(K);
+        }
+        return S;
+    }
+
+    public static BigInteger pow(BigInteger base, BigInteger exponent)
+    {
+        BigInteger result = BigInteger.ONE;
+        while (exponent.signum() > 0)
+        {
+            if (exponent.testBit(0))
+                result = result.multiply(base);
+            base = base.multiply(base);
+            exponent = exponent.shiftRight(1);
+        }
+        return result;
     }
 
 }
