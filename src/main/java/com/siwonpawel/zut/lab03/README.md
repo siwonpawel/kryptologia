@@ -1,5 +1,8 @@
 ## Wiadomość o jakiej maksymalnie długości można podpisać za pomocą tego algorytmu?
 
+Wiadomosc - dowolnie duza, ale wazne zeby bloki po podzieleniu
+wiadomosc nie mialy wartosci liczbowej wiekszej jak N
+
 ## Sprawdź czas wykonania operacji podpisywania i weryfikacji podpisu dla różnych wartości modułu, tj. dla 2048, 3072, 4096, 7680 bitów.
 
 Benchmark Mode Cnt Score Error Units
@@ -14,3 +17,5 @@ EncryptorBenchmark.test7680 avgt 2 0.135 ms/op
 
 ## Jak ustala się wartość klucza publicznego?
 
+e = coprime z phiN (p-1)(q-1)  
+dobre wartosci to 3 lub 65537
