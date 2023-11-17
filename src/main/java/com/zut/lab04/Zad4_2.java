@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
@@ -28,11 +29,11 @@ public class Zad4_2
         try (Scanner s = new Scanner(System.in))
         {
             System.out.print("What secret you want to encode? ");
-            secret = read(s, null);
+            secret = read(s, null, null);
             System.out.print("How many shares needs to be created? ");
-            n = read(s, valueOf(20));
+            n = read(s, valueOf(2), valueOf(20));
             System.out.print("How many shares are needed to recover secret? ");
-            m = read(s, n);
+            m = read(s, valueOf(2), n);
         }
 
         var a = new BigInteger[m.subtract(ONE).intValue()];
@@ -134,14 +135,18 @@ public class Zad4_2
         return sum.add(secret).mod(p);
     }
 
-    private static BigInteger read(Scanner s, BigInteger upperThreshold)
+    private static BigInteger read(Scanner s, BigInteger lowerThreshold, BigInteger upperThreshold)
     {
+        String downThreshold = Optional.ofNullable(lowerThreshold)
+                .map(BigInteger::toString)
+                .orElse("1");
         String upThreshold = Optional.ofNullable(upperThreshold)
                 .map(BigInteger::toString)
                 .orElse("inf+");
+
         while (true)
         {
-            System.out.print("Give a number between 2 and " + upThreshold + " : ");
+            System.out.print("Give a number between " + downThreshold + " and " + upThreshold + " : ");
             s.reset();
             if (!s.hasNextBigInteger())
             {
@@ -151,9 +156,9 @@ public class Zad4_2
 
             BigInteger val = s.nextBigInteger();
 
-            if (val.compareTo(valueOf(2)) < 0 || (upperThreshold != null && val.compareTo(upperThreshold) > 0))
+            if (val.compareTo(Objects.requireNonNullElse(lowerThreshold, valueOf(1))) < 0 || (upperThreshold != null && val.compareTo(upperThreshold) > 0))
             {
-                System.out.println("Given number needs to be between <2, " + upperThreshold + ">");
+                System.out.println("Given number needs to be between <" + lowerThreshold + ", " + upperThreshold + ">");
                 continue;
             }
 
