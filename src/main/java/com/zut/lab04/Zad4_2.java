@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
+import static java.math.BigInteger.probablePrime;
 import static java.math.BigInteger.valueOf;
 
 public class Zad4_2
@@ -26,15 +27,18 @@ public class Zad4_2
         BigInteger m;
         try (Scanner s = new Scanner(System.in))
         {
-            secret = read(s, valueOf(Long.MAX_VALUE));
-            n = read(s, null); // ilosc cieni
-            m = read(s, n); // minimalna wartosc udzialow do odtworzenia sekretu
+            System.out.print("What secret you want to encode? ");
+            secret = read(s, null);
+            System.out.print("How many shares needs to be created? ");
+            n = read(s, valueOf(20));
+            System.out.print("How many shares are needed to recover secret? ");
+            m = read(s, n);
         }
 
-        var a = new BigInteger[m.subtract(ONE).intValue()]; // randomowe a, b, c ... ax^2+bx etc
+        var a = new BigInteger[m.subtract(ONE).intValue()];
         for (var i = ZERO; i.compareTo(m.subtract(ONE)) < 0; i = i.add(ONE))
         {
-            a[i.intValue()] = valueOf(random.nextInt(Integer.MAX_VALUE));
+            a[i.intValue()] = probablePrime(secret.bitLength(), random);
         }
 
         var p = BigInteger.probablePrime(secret.bitLength() + 1, random); // liczba pierwsza wieksza od secretu i n
@@ -42,9 +46,10 @@ public class Zad4_2
         System.out.println("M = " + secret);
         System.out.println("n = " + n);
         System.out.println("m = " + m);
+
         for (var i = ZERO; i.compareTo(valueOf(a.length)) < 0; i = i.add(ONE))
         {
-            System.out.println("a[" + valueOf(a.length).subtract(i) + "] = " + a[i.intValue()]);
+            System.out.printf("a%-2s = %s%n", valueOf(a.length).subtract(i), a[i.intValue()]);
         }
         System.out.println("p = " + p);
 
@@ -57,14 +62,14 @@ public class Zad4_2
             xs[i.intValue()] = i;
             ms[i.intValue()] = wx(m, a, i, p, secret);
 
-            System.out.printf("x%d = %s\t m%d = %s%n", i, xs[i.intValue()], i, ms[i.intValue()]);
+            System.out.printf("x%-2s = %-2s\t m%-2s = %s%n", i, xs[i.intValue()], i, ms[i.intValue()]);
         }
 
         BigInteger[] participants = getParticipants(n, m.intValue(), random);
-        var decodedSecret = decde(participants, ms, xs, p);
+        var decodedSecret = decode(participants, ms, xs, p);
 
         System.out.println("Decoded secret: " + decodedSecret);
-        System.out.printf("Valid %b%n", secret.equals(decodedSecret));
+        System.out.printf("is valid %b%n", secret.equals(decodedSecret));
     }
 
     private static BigInteger[] getParticipants(BigInteger shares, int numberOfShares, Random random)
@@ -84,7 +89,7 @@ public class Zad4_2
         return participants;
     }
 
-    private static BigInteger decde(BigInteger[] participants, BigInteger[] ms, BigInteger[] xs, BigInteger p)
+    private static BigInteger decode(BigInteger[] participants, BigInteger[] ms, BigInteger[] xs, BigInteger p)
     {
         var decodedSecret = ZERO;
         for (var i : participants)
@@ -133,13 +138,14 @@ public class Zad4_2
         return sum.add(secret).mod(p);
     }
 
-    private static BigInteger read(Scanner s, BigInteger lessThan)
+    private static BigInteger read(Scanner s, BigInteger upperThreshold)
     {
-        var upperThreshold = Objects.requireNonNullElse(lessThan, valueOf(20));
-
+        String upThreshold = Optional.ofNullable(upperThreshold)
+                .map(BigInteger::toString)
+                .orElse("inf+");
         while (true)
         {
-            System.out.print("Give a number between <2, " + upperThreshold + "> : ");
+            System.out.print("Give a number between 2 and " + upThreshold + " : ");
             s.reset();
             if (!s.hasNextBigInteger())
             {
@@ -149,7 +155,7 @@ public class Zad4_2
 
             BigInteger val = s.nextBigInteger();
 
-            if (val.compareTo(valueOf(2)) < 0 || val.compareTo(upperThreshold) > 0)
+            if (val.compareTo(valueOf(2)) < 0 || (upperThreshold != null && val.compareTo(upperThreshold) > 0))
             {
                 System.out.println("Given number needs to be between <2, " + upperThreshold + ">");
                 continue;
