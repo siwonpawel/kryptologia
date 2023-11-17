@@ -94,17 +94,13 @@ public class Zad4_2
         var decodedSecret = ZERO;
         for (var i : participants)
         {
-            var ii = i.intValue();
             var tmpValue = ms[i.intValue()];
-
             for (var j : participants)
             {
-                var ij = j.intValue();
-
-                if (ii != ij)
+                if (i.compareTo(j) != 0)
                 {
-                    BigInteger mod = xs[ij].multiply(valueOf(-1)).mod(p);
-                    BigInteger mod1 = xs[ii].add(xs[ij].multiply(valueOf(-1))).modInverse(p);
+                    BigInteger mod = xs[j.intValue()].multiply(valueOf(-1)).mod(p);
+                    BigInteger mod1 = xs[i.intValue()].add(xs[j.intValue()].multiply(valueOf(-1))).modInverse(p);
 
                     BigInteger mod2 = mod.multiply(mod1).mod(p);
                     tmpValue = tmpValue.multiply(mod2);
