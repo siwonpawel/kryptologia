@@ -100,15 +100,15 @@ public class Zad4_2
             {
                 if (i.compareTo(j) != 0)
                 {
-                    BigInteger mod = xs[j.intValue()].multiply(valueOf(-1)).mod(p);
+                    BigInteger mod = xs[j.intValue()].multiply(valueOf(-1));
                     BigInteger mod1 = xs[i.intValue()].add(xs[j.intValue()].multiply(valueOf(-1))).modInverse(p);
 
-                    BigInteger mod2 = mod.multiply(mod1).mod(p);
+                    BigInteger mod2 = mod.multiply(mod1);
                     tmpValue = tmpValue.multiply(mod2);
                 }
             }
 
-            decodedSecret = decodedSecret.add(tmpValue.mod(p));
+            decodedSecret = decodedSecret.add(tmpValue);
         }
 
         decodedSecret = decodedSecret.mod(p);
