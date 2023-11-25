@@ -27,7 +27,7 @@ class LFSRTest
         StringBuilder sb = new StringBuilder(shiftNo);
         for (int i = 0; i < shiftNo; i++)
         {
-            sb.append(lfsr.shift(false));
+            sb.append(lfsr.shift(false) ? 1 : 0);
         }
         String result = sb.toString();
 
@@ -50,14 +50,14 @@ class LFSRTest
         StringBuilder sb1 = new StringBuilder(shiftNo);
         for (int i = 0; i < shiftNo; i++)
         {
-            sb1.append(lfsr.shift());
+            sb1.append(lfsr.shift() ? "1" : "0");
         }
         lfsr.reset();
 
         StringBuilder sb2 = new StringBuilder(shiftNo);
         for (int i = 0; i < shiftNo; i++)
         {
-            sb2.append(lfsr.shift());
+            sb2.append(lfsr.shift() ? "1" : "0");
         }
 
         String result1 = sb1.toString();

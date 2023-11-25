@@ -1,5 +1,7 @@
 package com.zut.lab05;
 
+import java.util.Arrays;
+
 public class LFSR
 {
 
@@ -16,7 +18,7 @@ public class LFSR
         this.initialStatus = toArr(initialStatus);
         this.taps = toArr(taps);
 
-        this.register = this.initialStatus;
+        this.register = Arrays.copyOf(this.initialStatus, this.initialStatus.length);
         this.lastResult = this.free;
     }
 
@@ -31,16 +33,16 @@ public class LFSR
         return booleans;
     }
 
-    public String shift()
+    public boolean shift()
     {
         return shift(true);
     }
 
-    public String shift(boolean clk)
+    public boolean shift(boolean clk)
     {
         if (!clk)
         {
-            return lastResult ? "1" : "0";
+            return lastResult;
         }
 
         lastResult = register[0] ^ free;
@@ -54,12 +56,12 @@ public class LFSR
 
         System.arraycopy(register, 1, register, 0, register.length - 1);
         register[register.length - 1] = lastResult;
-        return lastResult ? "1" : "0";
+        return lastResult;
     }
 
     public void reset()
     {
-        this.register = this.initialStatus;
+        this.register = Arrays.copyOf(this.initialStatus, this.initialStatus.length);
         this.lastResult = this.free;
     }
 }
