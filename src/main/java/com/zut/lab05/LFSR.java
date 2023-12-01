@@ -18,8 +18,7 @@ public class LFSR
         this.initialStatus = toArr(initialStatus);
         this.taps = toArr(taps);
 
-        this.register = Arrays.copyOf(this.initialStatus, this.initialStatus.length);
-        this.lastResult = this.free;
+        reset();
     }
 
     private static boolean[] toArr(String value)
