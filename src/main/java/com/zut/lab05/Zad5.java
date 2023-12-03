@@ -5,6 +5,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.math3.special.Gamma;
+
 import com.google.common.base.Splitter;
 
 public class Zad5
@@ -25,7 +27,7 @@ public class Zad5
         pokerTest(generatedValue);
         longRunsTest(generatedValue);
         runsTest(generatedValue);
-
+        blockFrequencyTest(generatedValue, 3);
     }
 
     private static void pokerTest(String value)
@@ -87,7 +89,8 @@ public class Zad5
 
     private static void runsTest(String value)
     {
-        int[] cnt = new int[6];
+        int[] cntZeros = new int[6];
+        int[] cntOnes = new int[6];
 
         char tmp = value.charAt(0);
         int cntTmp = 1;
@@ -97,13 +100,27 @@ public class Zad5
 
             if (c != tmp)
             {
-                if (cntTmp >= 6)
+                if (c == '0')
                 {
-                    cnt[5]++;
+                    if (cntTmp >= 6)
+                    {
+                        cntZeros[5]++;
+                    }
+                    else
+                    {
+                        cntZeros[cntTmp - 1]++;
+                    }
                 }
                 else
                 {
-                    cnt[cntTmp - 1]++;
+                    if (cntTmp >= 6)
+                    {
+                        cntOnes[5]++;
+                    }
+                    else
+                    {
+                        cntOnes[cntTmp - 1]++;
+                    }
                 }
 
                 cntTmp = 1;
@@ -115,14 +132,23 @@ public class Zad5
             }
         }
 
-        boolean testResult = between(1, cnt[0], 2315, 2685) &
-                between(2, cnt[1], 1114, 1386) &
-                between(3, cnt[2], 527, 723) &
-                between(4, cnt[3], 240, 384) &
-                between(5, cnt[4], 103, 209) &
-                between(6, cnt[5], 103, 209);
+        System.out.println("Zeros: ");
+        boolean testZerosResult = between(1, cntZeros[0], 2315, 2685) &
+                between(2, cntZeros[1], 1114, 1386) &
+                between(3, cntZeros[2], 527, 723) &
+                between(4, cntZeros[3], 240, 384) &
+                between(5, cntZeros[4], 103, 209) &
+                between(6, cntZeros[5], 103, 209);
 
-        if (testResult)
+        System.out.println("Ones: ");
+        boolean testOnesResult = between(1, cntOnes[0], 2315, 2685) &
+                between(2, cntOnes[1], 1114, 1386) &
+                between(3, cntOnes[2], 527, 723) &
+                between(4, cntOnes[3], 240, 384) &
+                between(5, cntOnes[4], 103, 209) &
+                between(6, cntOnes[5], 103, 209);
+
+        if (testZerosResult & testOnesResult)
         {
             System.out.println("runs test passed!");
         }
@@ -130,6 +156,40 @@ public class Zad5
         {
             System.out.println("runs test not passed!");
         }
+    }
+
+    private static void blockFrequencyTest(String input, int blockSize)
+    {
+        input = "0110011010";
+        int blockSizee = 3;
+
+        int numberOfBlocks = input.length() / blockSizee;
+        input = input.substring(0, numberOfBlocks * blockSizee);
+
+        Iterable<String> split = Splitter.fixedLength(blockSizee).split(input);
+
+        Map<String, Double> blockWithOnesCount = StreamSupport.stream(split.spliterator(), false)
+                .filter(s -> s.length() == blockSizee)
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        v -> (double) v.chars().filter(ch -> ch == '1').count())
+                );
+
+        double chiSquare = blockWithOnesCount.values().stream()
+                .mapToDouble(cnt -> cnt / blockSize)
+                .map(v -> Math.pow(v - 0.5, 2))
+                .sum();
+
+        chiSquare *= 4 * blockSizee;
+
+        double igamc = igamc(numberOfBlocks / 2.0, chiSquare / 2);
+
+        System.out.println("P value: " + igamc + " test passed: " + (igamc >= 0.01));
+    }
+
+    private static double igamc(double a, double b)
+    {
+        return Gamma.regularizedGammaQ(a, b);
     }
 
     private static boolean between(int n, int value, int lowerLimit, int upperLimit)
