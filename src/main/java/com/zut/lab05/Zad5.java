@@ -1,5 +1,6 @@
 package com.zut.lab05;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -160,27 +161,22 @@ public class Zad5
 
     private static void blockFrequencyTest(String input, int blockSize)
     {
-        input = "0110011010";
-        int blockSizee = 3;
+        int numberOfBlocks = input.length() / blockSize;
+        String truncatedInput = input.substring(0, numberOfBlocks * blockSize);
 
-        int numberOfBlocks = input.length() / blockSizee;
-        input = input.substring(0, numberOfBlocks * blockSizee);
+        Iterable<String> split = Splitter.fixedLength(blockSize).split(truncatedInput);
 
-        Iterable<String> split = Splitter.fixedLength(blockSizee).split(input);
+        List<Long> oneCounts = StreamSupport.stream(split.spliterator(), false)
+                .map(v -> v.chars().filter(ch -> ch == '1').count())
+                .collect(Collectors.toList());
 
-        Map<String, Double> blockWithOnesCount = StreamSupport.stream(split.spliterator(), false)
-                .filter(s -> s.length() == blockSizee)
-                .collect(Collectors.toMap(
-                        Function.identity(),
-                        v -> (double) v.chars().filter(ch -> ch == '1').count())
-                );
-
-        double chiSquare = blockWithOnesCount.values().stream()
-                .mapToDouble(cnt -> cnt / blockSize)
+        double chiSquare = oneCounts.stream()
+                .mapToDouble(cnt -> cnt)
+                .map(cnt -> cnt / blockSize)
                 .map(v -> Math.pow(v - 0.5, 2))
                 .sum();
 
-        chiSquare *= 4 * blockSizee;
+        chiSquare *= 4 * blockSize;
 
         double igamc = igamc(numberOfBlocks / 2.0, chiSquare / 2);
 
