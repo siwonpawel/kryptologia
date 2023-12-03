@@ -184,7 +184,7 @@ public class Zad5
 
         double igamc = igamc(numberOfBlocks / 2.0, chiSquare / 2);
 
-        System.out.println("P value: " + igamc + " test passed: " + (igamc >= 0.01));
+        System.out.println("Frequency Test within a Block -> P value: " + igamc + " test passed: " + (igamc >= 0.01));
     }
 
     private static double igamc(double a, double b)
