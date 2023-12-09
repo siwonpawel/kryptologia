@@ -13,6 +13,24 @@ import iaik.security.ec.common.SecurityStrength;
 public class Zad06
 {
 
+    /*
+
+
+
+    a) Jaka krzywa eliptyczna jest używana, jaki jest jej rozmiar?
+        extended Jacobian curve, 394b
+
+    b) Jak wybierane jest k?
+        bezpiczna kryptohtaficzna liczba losowa z zakresu [1, n-1]
+
+    c) Jakie kroki w tej implementacji demonstracyjnej ECDSA zostały pominięte?
+
+        Sprawdź czy liczby r i s to liczby całkowite z zakresu [1, n-1]. Jeżeli nie to podpis jest
+nieważny ?? ale jest to big integer wiec czy jest to pominiete?
+
+
+     */
+
     public static void main(String[] args)
     {
         System.out.println("---- Demo implementacji ECDSA: Tomasz Hyla 2022");
